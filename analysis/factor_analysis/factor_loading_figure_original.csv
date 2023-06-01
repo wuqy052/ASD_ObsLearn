@@ -1,0 +1,66 @@
+﻿item,Factor1,Factor2,Factor3,Factor4,Factor5,Factor6,Factor7,Factor8,Factor,threshold,final,Subscale,subscale_num,order,question
+SRS.A_56,0.920989647,0.011250706,0.041978924,-0.108034851,-0.065072599,0.501822122,-0.015481871,0.031798442,1,TRUE,1,Social awareness,1,1,walk between two people talking to one another
+SRS.A_54,0.718248687,0.125110114,-0.090288518,0.216524194,-0.089782414,0.213688205,-0.085313859,0.176672109,1,TRUE,1,Social awareness,1,2,think about people in the same way as objects
+SRS.A_52,0.669038255,-0.044989999,0.008713236,-0.052960783,-0.139468195,0.149000741,0.200374769,-0.130976521,1,TRUE,1,Social awareness,1,3,overly loud without realizing it
+SRS.A_2,0.360081773,0.048540988,0.031481279,-0.111725083,0.073393792,-0.006113506,-0.021411279,0.247038658,1,TRUE,1,Social awareness,1,4, facial expressions send the wrong message 
+SRS.A_45,0.273694172,-0.187353641,0.427338961,-0.07686703,0.08865607,0.088024313,-0.07741064,-0.020623374,3,TRUE,3,Social awareness,1,5,"When others around me are paying attention to something, I get interested in what they are attending to."
+SRS.A_25,0.033066896,0.271680239,0.128910781,0.227770092,0.020385087,0.053514548,0.307858935,-0.005050111,7,TRUE,7,Social awareness,1,6,"I do not mind being out of step with or ""not on the same wavelength"" as others."
+SRS.A_7,0.021270087,-0.090196983,0.653884979,-0.031815046,0.042469176,-0.058254883,0.00599999,0.092795949,3,TRUE,3,Social awareness,1,7,I am usually aware of how others are feeling.
+SRS.A_44,0.808987374,-0.074493731,-0.028478987,0.048642234,0.078402872,0.183988055,-0.192402473,0.061622243,1,TRUE,1,Social cognition,2,8,have trouble understanding chains of causation
+SRS.A_62,0.671529188,-0.114689619,-0.010536245,0.015873118,0.078664095,0.07961561,0.182518362,0.193167647,1,TRUE,1,Social cognition,2,9,unusual reason for doing something
+SRS.A_58,0.664172437,-0.039531109,-0.00971532,-0.136621102,-0.05460228,-0.025324921,-0.07519812,0.00273564,1,TRUE,1,Social cognition,2,10,concentrate too much on parts than the whole picture.
+SRS.A_10,0.606266187,-0.032908614,-0.063873955,-0.047454786,0.009153698,-0.044211693,-0.02368143,0.054522114,1,TRUE,1,Social cognition,2,11,take things too literally
+SRS.A_5,0.576294805,0.050411696,-0.110183789,-0.010198317,0.01846847,0.147004957,0.00250954,-0.2119244,1,TRUE,1,Social cognition,2,12,do not recognize others taking advantage of me
+SRS.A_30,0.47923016,0.177017905,-0.017711949,-0.019177859,0.020245999,-0.311966838,-0.100230265,-0.158373582,1,TRUE,1,Social cognition,2,13,upset in situations with lots of things going on
+SRS.A_42,0.427296127,0.042963608,0.092086998,0.033875987,-0.062743708,-0.214558683,-0.0129813,0.101587797,1,TRUE,1,Social cognition,2,14,"overly sensitive to certain sounds, textures, or smells"
+SRS.A_59,0.271882612,0.17444615,0.112998727,-0.079027687,-0.139539367,-0.053474102,0.084402864,0.332950024,8,TRUE,8,Social cognition,2,15,I am more suspicious than most people.
+SRS.A_40,0.028673194,-0.111174748,0.190898707,0.162319543,-0.02525984,-0.092980603,0.321895226,0.045090695,7,TRUE,7,Social cognition,2,16,I am imaginative.
+SRS.A_15,-0.147013516,0.0151553,0.655048731,-0.059207126,-0.053251862,-0.044989544,0.039828698,0.11225196,3,TRUE,3,Social cognition,2,17,"When people change their tone or facial expression, I usually pick up on that and understand what it means."
+SRS.A_48,-0.176656605,0.094119605,0.332742835,0.101044206,-0.14414439,0.021984195,0.159518132,-0.090575192,3,TRUE,3,Social cognition,2,18,I have a good sense of humor and can understand jokes.
+SRS.A_17,-0.244006788,0.249234783,0.493468145,0.112926081,0.042023197,-0.083614189,0.073768476,0.026302827,3,TRUE,3,Social cognition,2,19,I recognize when something is unfair.
+SRS.A_55,0.9637441,-0.034781008,0.009272261,0.043734059,-0.029094578,0.466743036,-0.031015736,0.025833654,1,TRUE,1,Social communication,3,20,too close to others or invade their personal space
+SRS.A_51,0.689817141,-0.005853983,-0.032116436,-0.05009455,0.076276058,0.017561298,0.004748352,0.022383113,1,TRUE,1,Social communication,3,21,have difficulty answering questions directly
+SRS.A_47,0.552763927,0.057234416,0.028103031,-0.017076274,-0.095667129,0.157903284,0.210127687,0.038287469,1,TRUE,1,Social communication,3,22,laugh at inappropriate times
+SRS.A_41,0.543815245,-0.043734683,-0.075205783,-0.049265524,-0.055537434,-0.079295309,0.191427247,-0.005528809,1,TRUE,1,Social communication,3,23,wander aimlessly from one activity to another
+SRS.A_53,0.503573055,0.121995325,-0.03526717,0.074137574,0.100009062,0.180947323,-0.126642733,0.272115824,1,TRUE,1,Social communication,3,24, talk in a monotone voice 
+SRS.A_19,0.468478801,0.069192945,0.046877614,-0.12842141,0.233831481,-0.059250016,-0.016584725,-0.034251807,1,TRUE,1,Social communication,3,25,get frustrated trying to get ideas across
+SRS.A_61,0.463883574,0.271769692,-0.105444741,0.065424182,-0.140985977,-0.032363386,-0.056048624,0.109628172,1,TRUE,1,Social communication,3,26,tend to be inflexible
+SRS.A_35,0.411087559,0.125287373,-0.054319726,0.102236881,0.539472973,0.026003563,0.027829807,-0.067170516,5,TRUE,5,Social communication,3,27,I have trouble keeping up with the flow of a normal conversation.
+SRS.A_46,0.366892669,0.06256338,0.089998371,-0.047510305,0.006980222,0.008383221,-0.067252165,0.407398951,8,TRUE,8,Social communication,3,28,Others feel that I have overly serious facial expressions.
+SRS.A_16,0.359361875,0.193355623,0.01310288,-0.037258683,0.317391804,0.140035395,0.062084838,-0.008663255,1,TRUE,1,Social communication,3,29,avoid or unusual eye contact
+SRS.A_33,0.334624126,0.161371441,-0.015327051,-0.032500981,0.365142034,0.026683678,0.212871549,0.007675913,5,TRUE,5,Social communication,3,30,"My behavior is socially awkward, even when I am trying to be polite."
+SRS.A_60,0.325815048,0.245136875,-0.067388907,-0.096747207,-0.177596947,0.118211012,0.024701089,0.51457787,8,TRUE,8,Social communication,3,31,Other people think I am emotionally distant and do not show my feelings.
+SRS.A_36,0.294954506,0.279931273,-0.01665169,-0.000907491,0.102336315,0.022782232,0.219321338,-0.037780803,1,FALSE,0,Social communication,3,32,have difficulty relating to family members
+SRS.A_13,0.248401412,0.169136122,-0.012185141,0.088331301,0.59983936,-0.036576304,0.055599369,-0.119363015,5,TRUE,5,Social communication,3,33,I am awkward in turn-taking interactions with others (e.g. I have a hard time keeping up with the give-and-take of a conversation).
+SRS.A_18,0.226197186,0.301805258,0.083150764,-0.082295009,0.353515436,0.033215266,0.014001845,0.025599413,5,TRUE,5,Social communication,3,34,"I have difficulty making friends, even when trying my best."
+SRS.A_37,0.209236418,0.400578556,-0.091168781,0.061100884,0.297116178,0.005289287,0.096996265,-0.016106492,2,TRUE,2,Social communication,3,35,I have difficulty relating to adults outside of my family.
+SRS.A_21,0.133614693,0.069897393,0.425287548,-0.009088862,-0.163253137,0.06670834,0.101264688,0.023037788,3,TRUE,3,Social communication,3,36,I am able to imitate others\ actions and expressions when it is socially appropriate to do so.
+SRS.A_12,0.118637574,-0.093460079,0.314733991,0.484818818,0.098042226,0.02236168,-0.05792882,-0.116528178,4,TRUE,4,Social communication,3,37,I am able to communicate my feelings to others.
+SRS.A_26,0.112548175,-0.162476375,0.585913618,-0.148262648,-0.035512456,0.033476926,0.012412522,-0.188547358,3,TRUE,3,Social communication,3,38,I offer comfort to others when they are sad.
+SRS.A_57,0.074817764,0.663488736,0.015799106,-0.095196333,-0.052001793,0.002198222,0.075195995,0.14063131,2,TRUE,2,Social communication,3,39,I tend to isolate myself.
+SRS.A_22,-0.158055505,0.213240678,0.407941553,-0.001563937,-0.159726566,0.114586707,-0.134747967,-0.067890206,3,TRUE,3,Social communication,3,40,I interact appropriately with other adults.
+SRS.A_38,-0.188053563,0.041180888,0.720787383,-0.120260906,0.051894253,0.071599505,-0.026805732,-0.036715967,3,TRUE,3,Social communication,3,41,I respond appropriately to mood changes in others (e.g. when a friend\s mood changes from happy to sad).
+SRS.A_9,0.620346346,-0.054806715,0.022780473,0.04777241,0.141427259,0.07422816,-0.00785982,-0.110439751,1,TRUE,1,Social motivation,4,42,overly dependent on others for help 
+SRS.A_65,0.464700787,0.028864959,0.070967165,-0.066300683,0.046544377,-0.051498256,0.182875368,0.03130869,1,TRUE,1,Social motivation,4,43,stare or gaze off into space
+SRS.A_43,0.428393866,-0.603502832,0.249790009,0.019324687,-0.004825158,0.105957014,-0.08498521,0.019074029,2,TRUE,2,Social motivation,4,44,I enjoy small talk (casual conversation with others).
+SRS.A_34,0.317951783,0.405725236,-0.041869362,-0.007047696,-0.047050222,0.137059534,0.040260498,0.243192482,2,TRUE,2,Social motivation,4,45,I avoid people who want to be emotionally close to me.
+SRS.A_3,0.218725145,-0.18319928,-0.032260159,0.687505214,-0.046933503,0.014366683,0.019474109,-0.093648328,4,TRUE,4,Social motivation,4,46,I feel self-confident when interacting with others.
+SRS.A_27,0.036011601,0.638699982,-0.018004085,0.014306238,0.204554881,-0.043163791,0.011724565,-0.01723518,2,TRUE,2,Social motivation,4,47,I avoid starting social interactions with other adults.
+SRS.A_11,0.025001591,-0.080055497,-0.120313817,0.980083933,0.108825708,-0.045263893,0.030997147,-0.057043414,4,TRUE,4,Social motivation,4,48,I have good self-confidence.
+SRS.A_1,-0.003826576,0.501050111,0.123040359,-0.087114578,0.056839041,-0.079399545,-0.130135518,0.035975466,2,TRUE,2,Social motivation,4,49,I am much more uncomfortable in social situations than when I am by myself.
+SRS.A_23,-0.012570815,0.711431604,0.044142647,-0.033857339,0.023744354,-0.040873847,-0.06715369,0.046789024,2,TRUE,2,Social motivation,4,50,I do not join group activities or social events unless prompted or strongly urged to do so.
+SRS.A_64,-0.024437675,0.617726378,0.119934555,-0.149454887,0.088899368,-0.075986286,-0.015525411,0.046621675,2,TRUE,2,Social motivation,4,51,I am much more tense in social settings than when I am by myself.
+SRS.A_6,-0.129301792,0.864622633,-0.052237419,0.152027842,-0.003335884,-0.024165055,-0.032936234,0.060541301,2,TRUE,2,Social motivation,4,52,I would rather be alone than with others.
+SRS.A_63,0.771415687,-0.081735821,-0.02313854,0.057560148,0.139545074,0.317311739,0.059425847,0.133945957,1,TRUE,1,Restricted interests and repetitive behavior,5,53,unusual way of greeting another person
+SRS.A_50,0.678992549,-0.107322828,-0.034649295,0.084602472,0.019689721,-0.081686205,0.126086955,0.10874443,1,TRUE,1,Restricted interests and repetitive behavior,5,54, repetitive behaviors that others consider odd
+SRS.A_39,0.653620255,0.000278197,-0.061440142,0.09876873,0.035232375,-0.033947272,0.02225499,0.011626378,1,TRUE,1,Restricted interests and repetitive behavior,5,55,interested in too few topics or get too carried away
+SRS.A_28,0.574646882,0.022870841,-0.073346466,0.03048619,-0.067137608,-0.235929086,0.093323723,-0.087269683,1,TRUE,1,Restricted interests and repetitive behavior,5,56,think or talk about the same thing over and over
+SRS.A_4,0.538311496,-0.102733623,-0.048633354,-0.042760819,0.005470871,-0.146897897,0.088963135,0.128947739,1,TRUE,1,Restricted interests and repetitive behavior,5,57,rigid or inflexible patterns of behavior under stress
+SRS.A_20,0.534429622,-0.179766241,0.095631231,0.09534194,0.10503028,-0.119539062,0.179984183,0.128528868,1,TRUE,1,Restricted interests and repetitive behavior,5,58,unusual sensory interests 
+SRS.A_8,0.529141062,-0.111871836,-0.061488904,0.036311702,0.074672031,-0.036471995,0.436536836,0.019378539,1,TRUE,1,Restricted interests and repetitive behavior,5,59,behave in ways that seem strange or bizarre
+SRS.A_31,0.439945872,0.112196333,0.022181577,-0.016546158,-0.127367914,-0.385969787,0.007588672,-0.049887313,1,TRUE,1,Restricted interests and repetitive behavior,5,60,cannot get my mind off something once start thinking
+SRS.A_49,0.409744409,0.039708923,0.010464472,0.032415836,0.064377038,-0.077870224,0.02190971,0.029224679,1,TRUE,1,Restricted interests and repetitive behavior,5,61,do extremely well at some intellectual tasks
+SRS.A_29,0.3744271,0.062074936,0.009042928,-0.045034663,0.095022701,0.043903035,0.537973832,-0.026842364,7,TRUE,7,Restricted interests and repetitive behavior,5,62,I am regarded by others as odd or weird.
+SRS.A_24,0.363592007,0.202937877,-0.031937123,0.065794095,0.064098932,-0.34702005,-0.152526237,-0.022601902,1,TRUE,1,Restricted interests and repetitive behavior,5,63,have more difficulty with changes in routine
+SRS.A_14,0.314907281,0.120115392,0.112799173,-0.119462701,0.271791937,0.012768084,0.078686006,-0.220305278,1,TRUE,1,Restricted interests and repetitive behavior,5,64,not well coordinated
+SRS.A_32,-0.225574444,-0.040137516,0.203764209,0.232630841,0.054431744,-0.128173111,-0.287559623,0.086305377,4,FALSE,,,,65,I have good personal hygiene.

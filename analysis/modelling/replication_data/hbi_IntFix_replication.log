@@ -1,0 +1,77 @@
+cbm_hbi_hbi                                       24-Feb-2023 10:18:28
+Running hierarchical bayesian inference (HBI)...
+
+HBI has been initialized according to
+	lap_IntFix_expbeta_replication.mat [for model 1]
+ 
+Number of samples: 352
+Number of models: 1
+======================================================================
+Iteration 01
+Iteration 02
+                                                           dL:  671.84
+                                                           dx:    0.40
+Iteration 03
+                                                           dL:  228.29
+                                                           dx:    0.26
+Iteration 04
+                                                           dL:  103.69
+                                                           dx:    0.17
+Iteration 05
+                                                           dL:   57.66
+                                                           dx:    0.12
+Iteration 06
+                                                           dL:   36.81
+                                                           dx:    0.09
+Iteration 07
+                                                           dL:   25.70
+                                                           dx:    0.07
+Iteration 08
+                                                           dL:   18.99
+                                                           dx:    0.06
+Iteration 09
+                                                           dL:   14.57
+                                                           dx:    0.05
+Iteration 10
+                                                           dL:   11.48
+                                                           dx:    0.04
+Iteration 11
+                                                           dL:    9.23
+                                                           dx:    0.04
+Iteration 12
+                                                           dL:    7.55
+                                                           dx:    0.03
+Iteration 13
+                                                           dL:    6.26
+                                                           dx:    0.03
+Iteration 14
+                                                           dL:    5.25
+                                                           dx:    0.03
+Iteration 15
+                                                           dL:    4.45
+                                                           dx:    0.02
+Iteration 16
+                                                           dL:    3.81
+                                                           dx:    0.02
+Iteration 17
+                                                           dL:    3.29
+                                                           dx:    0.02
+Iteration 18
+                                                           dL:    2.86
+                                                           dx:    0.02
+Iteration 19
+                                                           dL:    2.50
+                                                           dx:    0.01
+Iteration 20
+                                                           dL:    2.19
+                                                           dx:    0.01
+Iteration 21
+                                                           dL:    1.94
+                                                           dx:    0.01
+Iteration 22
+                                                           dL:    1.72
+                                                           dx:    0.01
+Iteration 23
+                                                           dL:    1.53
+                                                           dx:    0.01
+                                                          Converged :]
