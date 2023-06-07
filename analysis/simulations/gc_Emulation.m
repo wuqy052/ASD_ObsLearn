@@ -1,11 +1,10 @@
-function [f, vals] = LL_Emulation(params,P)
+function pred_vals = gc_Emulation(params,tl)
 %Emulation model
 
-params(1) = exp(params(1)); % decision softmax beta [0 +Inf]
+% params(1): decision softmax beta [0 +Inf]
 
 lambda = 0.99999; %"optimal" Bayesian learner
-
-tr_nb = length(P(:,1));
+tr_nb = height(tl);
 
 %initialize variables
 prior_V = zeros(tr_nb,3); %each row=trial, each column=token
@@ -22,13 +21,11 @@ SM_struct{2,2} = [0.2 0.3 0.5; 0.5 0.2 0.3; 0.3 0.5 0.2]; %probability distribut
 SM_struct{2,3} = [0.3 0.5 0.2; 0.2 0.3 0.5; 0.5 0.2 0.3]; %probability distribution of HARD slot machine (high BU, horizOrd 3)
     
 %careful, the column indices may change
-tr_type  = P(:,4); %obs(1)/play(2)
-tr_bu    = P(:,6); %low BU(1)/high BU(2)
-unav_act = P(:,7);
-part_act = P(:,8); %partner's action (always = correct action)
-choice   = P(:,13); %subject's choice (1: left, 0: right)
-iscorr   = P(:,14); %is subject correct (1:yes, 0:no);
-hord     = P(:,11); %horizontal order
+tr_type  = tl.trType; %obs(1)/play(2)
+tr_bu    = tl.uncertainty; %low BU(1)/high BU(2)
+unav_act = tl.unavAct;
+part_act = tl.corrAct; %partner's action (always = correct action)
+hord     = tl.horizOrd; %horizontal order
 
 %task structure matrices
 P_PA_Tok{1,1} = [0 0 1;0 1 0;0 0 1]; %ua 1, horizOrd 1
@@ -48,8 +45,10 @@ P_PA_Tok{3,3} = [0 1 0;0 1 0;1 0 0]; %ua 3, horizOrd 3
 %and each row represents the conditional goal token (1:green, 2:red, 3:blue)
 
 P_left   = NaN(tr_nb,1);
-LH       = NaN(tr_nb,1);
+pred_ch  = NaN(tr_nb,1);
+pred_act = NaN(tr_nb,1);
 ll_corr  = NaN(tr_nb,1);
+is_corr  = NaN(tr_nb,1);
 
 for t=1:tr_nb
     
@@ -62,7 +61,7 @@ for t=1:tr_nb
         %trial's posterior such that there is a probability lambda of it
         %being the same (no switch) and a probability 1-lambda that one of the
         %other two tokens is now valuable
-        if P(t,3)==1 %initialize prior on first trial of each block
+        if tl.trialNb(t)==1 %initialize prior on first trial of each block
             prior_V(t,:) = [1/3 1/3 1/3];
         else %no switch possible on first trial
             prior_V(t,1) = lambda*V(t-1,1) + (1-lambda)*(1/2)*(V(t-1,2) + V(t-1,3));
@@ -113,25 +112,40 @@ for t=1:tr_nb
         val_diff = AV_av(1) - AV_av(2); %always left minus right difference
         
         P_left(t) = (1+exp(-params(1)*val_diff))^-1;
-        %if choice value is 1, use one part of likelihood contribution.
-        if choice(t) == 1
-            LH(t) = P_left(t);   
-            if iscorr(t) == 1
-                ll_corr(t) = P_left(t);
+        
+        %generate choice
+        n=rand();
+        if n<=P_left(t)
+            pred_ch(t) = 1; %left
+            if UA==1
+                pred_act(t) = 2;
             else
-                ll_corr(t) = 1 - P_left(t);
+                pred_act(t) = 1;
             end
-        %if choice value is 0, use other part of likelihood contribution    
-        elseif choice(t) == 0
-            LH(t) = 1-P_left(t);
-            if iscorr(t) == 1
-                ll_corr(t) = 1 - P_left(t);
+        else
+            pred_ch(t) = 0; %right
+            if UA==3
+                pred_act(t) = 2;
             else
-                ll_corr(t) = P_left(t);
+                pred_act(t) = 3;
             end
+        end
+        if pred_act(t) == PA
+            is_corr(t) = 1;
+            if pred_ch(t) == 1
+                ll_corr(t) = P_left(t);
+            elseif pred_ch(t) == 0
+                ll_corr(t) = 1-P_left(t);
+            end  
+        else
+            is_corr(t) = 0;
+            if pred_ch(t) == 1
+                ll_corr(t) = 1-P_left(t);
+            elseif pred_ch(t) == 0
+                ll_corr(t) = P_left(t);
+            end  
         end         
     end 
 end
-f = nansum(log(LH + eps)); %negative value of loglikelihood
-vals = [LH P_left ll_corr prior_V V AV];
+pred_vals = [P_left pred_ch pred_act ll_corr is_corr prior_V V AV];
 end

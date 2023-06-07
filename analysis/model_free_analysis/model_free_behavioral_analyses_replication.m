@@ -7,7 +7,7 @@ clear all
 close all
 fs = filesep;
 % this step load all the replication data (without any exclusion)
-load(['..',fs,'..',fs,'data',fs,'Study2',fs,'OL_data_all_subs_raw_rep.mat']);
+load(['..',fs,'..',fs,'data',fs,'Study2',fs,'OL_data_replication.mat']);
 
 %% perform analysis
 %trial definitions (this is set by design)
@@ -57,8 +57,6 @@ EM_prop = nan(n_all,3);
 acc_catch = nan(n_all,4);
 acc_both = nan(n_all,4);
 for s=1:n_all
-    subID = ol_task_data(s).subID;
-    recap_ol.ID_list{s} = subID;
     if ~isempty(ol_task_data(s).mainTask) 
         designNo = ol_task_data(s).designNo;
         tr_list = readmatrix(['..',fs,'..',fs,'task',fs,'Study2',fs,'trial_lists',fs,'trial_list_v' num2str(designNo) '.csv']);
@@ -118,21 +116,12 @@ for s=1:n_all
         end
         Acc_switch(s,:) = nanmean(acc_switch);
         EM_prop(s,:) = [nanmean(em_ch) nanmean(em_ch(i_lu)) nanmean(em_ch(~i_lu))];
-        
-        id_cell = repmat({subID},sum(i_play),1);
-        
+                
     end
 end
 
-allID = {ol_task_data.subID}';
 model_free_measures = [Accuracy,RT,missed,EM_prop,Acc_switch];
 
-%% apply subject exclusion, generate the final results
-load(['..',fs','..',fs,'data',fs,'Study2',fs,'SubList_final_replication.mat']);
-[C,~,incl] = intersect(sublist_rep,allID);
-model_free_measures = model_free_measures(incl,:);
-
-save('model_free_analyses_replication.mat', 'model_free_measures','C');
-
+save('model_free_analyses_replication.mat', 'model_free_measures');
 
 

@@ -1,4 +1,4 @@
-function [f,vals] = LL_IM_expbeta(params,P)
+function [f,vals] = LL_Imitation(params,P)
 %Imitation model
 
 params(1) = exp(params(1)); % softmax beta [0 +Inf]

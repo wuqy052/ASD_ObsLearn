@@ -7,7 +7,7 @@ clear all
 close all
 fs = filesep;
 % this step load all the discovery data (without any exclusion)
-load(['..',fs,'..',fs,'data',fs,'Study1',fs,'OL_data_all_subs_raw_dis.mat']);
+load(['..',fs,'..',fs,'data',fs,'Study1',fs,'OL_data_discovery.mat']);
 
 %% perform analysis
 nsub = length(data);
@@ -142,12 +142,6 @@ for s = 1:nsub
     
 end
 
-allID = vertcat({data.ID})';
 model_free_measures = [Accuracy,RT,missed,EM_prop,Acc_switch];
 
-%% apply subject exclusion, generate the final results
-load(['..',fs','..',fs,'data',fs,'Study1',fs,'SubList_final_discovery.mat']);
-[C,~,incl] = intersect(sublist,allID);
-model_free_measures = model_free_measures(incl,:);
-
-save('model_free_analyses_discovery.mat', 'model_free_measures','C');
+save('model_free_analyses_discovery.mat', 'model_free_measures');

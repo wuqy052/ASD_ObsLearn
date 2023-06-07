@@ -1,4 +1,4 @@
-function [f,vals] = LL_ArbF_AV_expbeta_HbCb3SaSc(params,P)
+function [f,vals] = LL_IntDynArb(params,P)
 %Dynamic reliability-driven arbitration model, with flexible weight of
 %uncertainty, allowing for weight assigned to a strategy to increase when
 %uncertainty is high

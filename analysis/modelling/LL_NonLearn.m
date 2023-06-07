@@ -1,4 +1,4 @@
-function [f,vals] = LL_Baseline_HbCb3SaSc(params,P)
+function [f,vals] = LL_NonLearn(params,P)
 % The baseline OL model
 % only consider 1) left/right bias; 2) color bias 3rd version; 3) sticky action no decay 4) sticky color no decay
 % params = [w_hand, w_redvsblue,w_green, w_stickyact, w_stickycol]

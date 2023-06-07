@@ -1,15 +1,15 @@
-function [f,vals] = LL_FixArb(params,P)
+function pred_vals = gc_FixArb(params,tl)
 %Fixed arbitration, one weight
 %this model arbitrates between action values instead of arbitrating between
 %choice probabilities, therefore it only includes 1 beta parameter.
 
 %transform parameters to make sure they are constrained between values that
 %make sense, for ex
-params(1) = exp(params(1));  % decision softmax beta [0 +Inf]
-params(2) = 1/(1+exp(-params(2)));   % fixed arbitration weight [0 1]
+% params(1): decision softmax beta [0 +Inf]
+% params(2): fixed arbitration weight [0 1]
 
 lambda = 0.99999;
-tr_nb = length(P(:,1));
+tr_nb = height(tl);
 
 %initialize variables
 prior_V = zeros(tr_nb,3); %prior token values for emulation (each row=trial, each column=token)
@@ -44,18 +44,18 @@ P_PA_Tok{3,3} = [0 1 0;0 1 0;1 0 0]; %ua 3, horizOrd 3
 %within each cell, each column represents the action performed by the partner
 %and each row represents the conditional goal token (1:green, 2:red, 3:blue)
 
-%extract relevant columns from P matrix
-tr_type  = P(:,4); %obs(1)/play(2)
-tr_bu    = P(:,6); %low BU(1)/high BU(2)
-unav_act = P(:,7);
-part_act = P(:,8); %partner's action (always = correct action)
-choice   = P(:,13); %subject's choice (left 1/right 0)
-iscorr   = P(:,14); %is subject correct (1:yes, 0:no);
-hord     = P(:,11); %horizontal order
+%extract relevant columns from tl matrix
+tr_type  = tl.trType; %obs(1)/play(2)
+tr_bu    = tl.uncertainty; %low BU(1)/high BU(2)
+unav_act = tl.unavAct;
+part_act = tl.corrAct; %partner's action (always = correct action)
+hord     = tl.horizOrd; %horizontal order
 
 P_left   = NaN(tr_nb,1);
-LH       = NaN(tr_nb,1);
+pred_ch  = NaN(tr_nb,1);
+pred_act = NaN(tr_nb,1);
 ll_corr  = NaN(tr_nb,1);
+is_corr  = NaN(tr_nb,1);
 
 for t=1:tr_nb
     
@@ -69,7 +69,7 @@ for t=1:tr_nb
         %valuable token
         P_PA_V = P_PA_Tok{UA,HO}(:,PA)'; %each row=token
         
-        if P(t,3)==1 %initialize prior on first trial of each block
+        if tl.trialNb(t)==1 %initialize prior on first trial of each block
             
             prior_V(t,:) = [1/3 1/3 1/3];
        
@@ -118,37 +118,50 @@ for t=1:tr_nb
         %IMIT action values
         %find most recent observe trial in current block where one of the two 
         %currently available actions was chosen
-        l = find(P(:,1)==P(t,1) & P(:,3)<P(t,3) & tr_type==1 & part_act~=UA);
+        l = find(tl.runNb==tl.runNb(t) & tl.trialNb<tl.trialNb(t) & tr_type==1 & part_act~=UA);
         if ~isempty(l)
             pred_choice = part_act(l(end));
             AVim(t,pred_choice) = 1;
         end
         
-        % combine 2 action values
         AV(t,:) = params(2)*AVbi(t,:) + (1-params(2))*AVim(t,:);
         AVf = AV(t,:);
         AVf(UA) = []; %isolate the 2 available actions
         P_left(t) = (1+exp(-params(1)*(AVf(1) - AVf(2))))^-1;
         
-        %if choice value is 1, use one part of likelihood contribution.
-        if choice(t) == 1
-            LH(t) = P_left(t);   
-            if iscorr(t) == 1
-                ll_corr(t) = P_left(t);
+        %generate choice
+        n=rand();
+        if n<=P_left(t)
+            pred_ch(t) = 1; %left
+            if UA==1
+                pred_act(t) = 2;
             else
-                ll_corr(t) = 1 - P_left(t);
+                pred_act(t) = 1;
             end
-        %if choice value is 0, use other part of likelihood contribution    
-        elseif choice(t) == 0
-            LH(t) = 1-P_left(t);
-            if iscorr(t) == 1
-                ll_corr(t) = 1 - P_left(t);
+        else
+            pred_ch(t) = 0; %right
+            if UA==3
+                pred_act(t) = 2;
             else
-                ll_corr(t) = P_left(t);
+                pred_act(t) = 3;
             end
-        end 
+        end
+        if pred_act(t) == PA
+            is_corr(t) = 1;
+            if pred_ch(t) == 1
+                ll_corr(t) = P_left(t);
+            elseif pred_ch(t) == 0
+                ll_corr(t) = 1-P_left(t);
+            end  
+        else
+            is_corr(t) = 0;
+            if pred_ch(t) == 1
+                ll_corr(t) = 1-P_left(t);
+            elseif pred_ch(t) == 0
+                ll_corr(t) = P_left(t);
+            end  
+        end  
     end 
 end
-f = nansum(log(LH + eps)); %negative value of loglikelihood
-vals = [LH P_left ll_corr prior_V V AVbi AVim AV];
+pred_vals = [P_left pred_ch pred_act ll_corr is_corr prior_V V AVbi AVim AV];
 end
