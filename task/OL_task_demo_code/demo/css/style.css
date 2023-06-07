@@ -1,0 +1,648 @@
+html{
+    height: 100%
+}
+
+body {
+    padding:0px;
+    margin: 0px;
+    width: 100%;
+    background-color: white;
+    color: black;
+    font-weight: 300;
+    font-size: 20pt;
+}
+
+/* text styling */
+strong {
+  font-weight: 600;
+}
+
+.warm {
+  color: steelblue;
+  text-align: justify;
+}
+
+.cool {
+  color: #ccccff;
+}
+
+h1 {
+  margin-top: 0px;
+}
+
+
+/* these are all the same for now, but easy to modify individually */
+#container-not-an-ad, #container-error, #container-exp, #container-consent, #container-instructions, #container-questionnaire {
+    background: white;
+    margin: 30px;
+}
+
+/* ad.html  - the ad that people view first */
+#adlogo {
+    width: 140px;
+    padding: 2px;
+    border: 1px solid #ccc;
+    margin-right: 1em;
+}
+
+/* consent.html - the consent form */
+.form {
+    max-width: 800px;
+    margin: 60px auto;
+    padding-bottom: 500px;
+}
+
+.form__header {
+    margin-bottom: 25px;
+    border-bottom: 1px dashed rgba(48, 48, 48, 0.15);
+    height: auto;
+}
+
+.form__title {
+    font-size: 35px;
+    margin: 2px 0;
+}
+
+.container {
+    display: block;
+    position: relative;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    color: #303030;
+}
+
+.checkmark {
+    position: absolute;
+    top: 40%;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+/* On mouse-over, add a grey background color */
+.container:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+/* When the checkbox is checked, add a blue background */
+.container input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+/* Show the checkmark when checked */
+.container input:checked ~ .checkmark:after {
+    display: block;
+}
+/* Style the checkmark/indicator */
+.container .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.mainInstructions {
+    width: 100%;
+    margin: 20px auto;
+    /*margin-top: 100px;*/
+    text-align: left;
+    font-size: 18px;
+    color: #303030;
+}
+
+.submit_button {
+    display: block;
+    height: 60px;
+    width: 200px;
+    border: none;
+    background-color: #005da9;
+    color: #f5f5f5;
+    text-transform: uppercase;
+    font-family: 'Source Sans Pro', sans-serif;
+    padding: 0 20px;
+    border-radius: 20px;
+    font-weight: 900;
+    cursor: pointer;
+    margin: auto;
+    -webkit-transition: all .25s ease-in-out;
+    transition: all .25s ease-in-out;
+    font-size: 22px;
+    outline: none;
+}
+.submit_button:hover, .submit:focus {
+    background-color: #008aff;
+    text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.25);
+    outline: none;
+}
+
+.legal {
+  text-align: justify;
+  font-size: 11pt;
+  line-height: 1.1em;
+}
+
+/* task */
+#trial {
+  margin: 0 auto;
+  width: 800px;
+  text-align: center;
+}
+
+#query {
+  color: darkgray;
+}
+
+.question {
+  margin-bottom: 30px;
+}
+
+/* errors */
+#error img {
+  padding-right: 10px;
+  padding-top: 15px;
+}
+
+.centered {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.25in;
+    height: 100%;
+    width: 100%;
+}
+.left {
+    display: flex;
+    justify-content: left;
+    align-items: left;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.25in;
+    height: 100%;
+    width: 100%;
+}
+.whiteText {
+    color: white;
+}
+.largeFont {
+    font-size: 0.4in;
+}
+.XlargeFont {
+    font-size: 0.6in;
+}
+
+.M {
+    font-size: 16px;
+}
+.S {
+    font-size: 14px;
+}
+.center {
+    text-align: center;
+}
+.topText {
+    font-size: 0.25in;
+    position: relative;
+    margin-bottom: 100px;
+    left: 0;
+    right: 0;
+}
+.topTextl2 {
+    font-size: 0.25in;
+    position: relative;
+    margin-bottom: 50px;
+    left: 0;
+    right: 0;
+}
+.bottomText {
+    font-size: 0.15in;
+    position: relative;
+    margin-bottom: 50px;
+    left: 0;
+    right: 0;
+}
+
+ul {
+    list-style-position:inside;
+    /*list-style-type: none;*/
+    text-align: left;
+}
+
+span.line {
+    display: inline-block;
+}
+
+/* FOR CONFBIAS TASK */
+/* #mainContainer {
+    height: 7in;
+    width: 9in;
+    position: relative;
+}*/
+
+#boxsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 4in;
+    width: 9in;
+    margin: auto;
+    position: absolute;
+    top: 2in;
+    /*     -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;  */
+}
+
+#namesContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 1in;
+    width: 9in;
+    margin: auto;
+    position: absolute;
+    bottom: 1.5in;
+}
+
+#txtBottomContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 1in;
+    width: 9in;
+    margin: auto;
+    position: absolute;
+    bottom: 1in;
+}
+
+#txtTopContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 1in;
+    width: 9in;
+    margin: auto;
+    position: absolute;
+    top: 0.5in;
+}
+
+.box {
+    height: 3in;
+    width: 3in;
+    flex: 0 1 100%;
+}
+
+#drawContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 1in;
+    width: 9in;
+    margin: auto;
+    position: absolute;
+    top: 2in;
+}
+
+#urnContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 3in;
+    width: 9in;
+    margin: auto;
+    position: absolute;
+    bottom: 0.5in;
+}
+
+#leftContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    cursor: pointer;
+    height: 4in;
+    /*width: 3in;
+    margin: auto;*/
+    margin-right: 75px;
+    position: relative;
+    /*left: 2in;
+    top: 2.5in;*/
+}
+
+#rightContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    cursor: pointer;
+    height: 4in;
+    /*width: 3in;
+    margin: auto;*/
+    margin-left: 75px;
+    position: relative;
+    /*right: 2in;
+    top: 2.5in;*/
+}
+
+#leftBeadContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    cursor: pointer;
+    height: 2.5in;
+    /*width: 2in;*/
+    /*width: 30%;*/
+    /*margin: auto;*/
+    margin-right: 100px;
+    position: relative;
+    /*left: 0in;*/
+    /*top: 3in;*/
+}
+
+#rightBeadContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    cursor: pointer;
+    height: 2.5in;
+    /*width: 2in;*/
+    /*width: 30%;*/
+    /*margin: auto;*/
+    margin-left: 100px;
+    position: relative;
+    /*right: 0in;*/
+    /*top: 3in;*/
+}
+
+.bead {
+    height: 1.5in;
+    width: 1.5in;
+    flex: 0 1 100%;
+}
+
+/* FOR OL TASK */
+#observeContainer {
+    height: 6.75in;
+    width: 7in;
+    position: relative;
+}
+#playContainer {
+    height: 5.25in;
+    width: 7in;
+    position: relative;
+}
+
+#slotsContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 4in;
+    width: 7in;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    /*     -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;  */
+}
+.slot {
+    height: 3.25in;
+    width: 2in;
+    flex: 0 1 100%;
+}
+
+#videoContainer {
+    height: 2.25in;
+    width: 3in;
+    position: absolute;
+    bottom: 0;
+    left: 2in;
+}
+video {
+    width: 100%;
+    height: auto;
+    /*object-fit: contain;*/
+}
+#trialTypeContainer {
+    position: absolute;
+    height: 1in;
+    bottom: 0;
+}
+.whiteBorder {
+    border-style: solid;
+    border-width: thin;
+    border-color: white;
+}
+
+#token {
+    height: 1in;
+    width: 1in;
+}
+
+/* FOR TRUST TASK */
+#mainContainer {
+    height: 4in;
+    width: 11in;
+    position: relative;
+}
+#pairContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 3in;
+    width: 11in;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#singleContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 3in;
+    width: 3in;
+    margin: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.singleItem {
+    height: 3in;
+    width: 3in;
+    flex: 0 1 100%;
+}
+#pairTextContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    height: 1in;
+    width:3.6in;
+    margin: auto;
+    position: absolute;
+    top: 1.2in;
+    left: 3.6in;
+}
+#bottomTextContainer {
+    position: absolute;
+    height: 1in;
+    bottom: 0;
+}
+#topTextContainer {
+    position: absolute;
+    height: 1in;
+    top: 0;
+}
+
+/* FOR DIGIT SPAN TASK */
+.jspsych-digit-span-recall{
+    display: inline-block;
+		width:64px;
+		height:64px;
+		border:3px solid #000000;
+    font-size: 35px;
+    font-weight: 400;
+    font-family: 'Open Sans', 'Arial', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 74px;
+}
+
+.jspsych-digit-span-recall:hover{
+    background-color: rgba(220,0,0,0.3);
+    display: inline-block;
+		width:64px;
+		height:64px;
+		border:3px solid #000000;
+    font-weight: 400;
+    font-family: 'Open Sans', 'Arial', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 74px;
+}
+
+/* Form elements like input fields and buttons */
+.jspsych-display-element input[type="text"] {
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  font-size: 14px;
+}
+
+/* borrowing Bootstrap style for btn elements, but combining styles a bit */
+.jspsych-btn-numpad {
+  width: 85px;
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0px;
+  font-size: 18px;
+  font-weight: 400;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  cursor: pointer;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.jspsych-btn {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0px;
+  font-size: 14px;
+  font-weight: 400;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  cursor: pointer;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+}
+
+.jspsych-btn:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
+.jspsych-btn:disabled {
+  background-color: #eee;
+  color: #aaa;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.jspsych-btn-numpad:hover {
+  background-color: #ddd;
+  border-color: #aaa;
+}
+
+.jspsych-btn-numpad:disabled {
+  background-color: #eee;
+  color: #aaa;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.recall-space {
+  width:400px;
+  height:64px;
+  border:0px solid #000000;
+  font-size: 35px;
+  font-weight: 400;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 64px;
+}
