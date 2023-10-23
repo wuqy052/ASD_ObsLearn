@@ -1,5 +1,8 @@
 # ASD_ObsLearn
 
+### Check out our Preprint!
+https://osf.io/preprints/psyarxiv/mfc7z/ 
+
 ### task folder
 A demo of the task is available at the following URL: http://www.its.caltech.edu/~ccharpen/OL_demo.html.
 
