@@ -97,6 +97,8 @@ for c=1:max(idx)
 end
 
 %% cross-validation, calculate the rand index - no normalization
+AR = nan(5,100);
+RI = nan(5,100);
 for r = 1:100
     c = cvpartition(size(input,1),'KFold',5);
     for k=1:5
@@ -120,18 +122,19 @@ for r = 1:100
             'Replicates',10);
         % match 2 partitions
         [~,cluster_match] = pdist2(C_train,C_test,'cosine','Smallest',1);
-        if length(unique(cluster_match))<size(cluster_match,1)
+        if length(unique(cluster_match))<size(cluster_match,2)
             disp('Not a good match!');
+        else
+            % reorder
+            idx_cluster_test_reorder = [];
+            for i=1:length(idx_cluster_test)
+                idx_cluster_test_reorder(i,1) = cluster_match(idx_cluster_test(i));
+            end
+            [AR(k,r),RI(k,r),~,~]=RandIndex(idx_cluster_test_reorder,idx_train_on_test);
         end
-        % reorder
-        idx_cluster_text_reorder = [];
-        for i=1:length(idx_cluster_test)
-            idx_cluster_text_reorder(i,1) = cluster_match(idx_cluster_test(i));
-        end
-        [AR(k,r),RI(k,r),~,~]=RandIndex(idx_cluster_text_reorder,idx_train_on_test);
     end
 end
-mean_AR = mean(AR(:));
-mean_RI = mean(RI(:));
+mean_AR = nanmean(AR(:));
+mean_RI = nanmean(RI(:));
 
 
