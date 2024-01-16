@@ -29,7 +29,7 @@ print(apply(SRS.promax$loadings^2,1,sum))
 SRS.promax.scores <- factor.scores(SRS_discovery, SRS.promax, Phi = NULL, method = c("Thurstone"),rho=NULL,impute="none")
 SRS_score_promax <- SRS.promax.scores$scores
 write.csv(SRS_score_promax, "SRS_fa_score_8_factor_promax_discovery.csv", row.names=F)
-
+write.csv(loading_ori_promax,"SRS_fa_loading_8_factor_promax.csv")
 #---------------------------------------------------------------#
 # Apply the dataset 1 FA scores to the replication data
 #---------------------------------------------------------------#
