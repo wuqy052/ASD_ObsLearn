@@ -53,9 +53,10 @@ SRS.A_62 + SRS.A_63 + SRS.A_65 + SRS.A_8 + SRS.A_9
         f3 =~ SRS.A_15 + SRS.A_17 + SRS.A_21 + SRS.A_22 + SRS.A_26 + SRS.A_38 + SRS.A_45 + SRS.A_48 + SRS.A_7
         f4 =~ SRS.A_11 + SRS.A_12 + + SRS.A_3
         f5 =~ SRS.A_13 + SRS.A_18 + SRS.A_33 + SRS.A_35
-        f7 =~ SRS.A_25 + SRS.A_29 + SRS.A_40
+        f7 =~ SRS.A_25 + SRS.A_29
         f8 =~  SRS.A_46 + SRS.A_59 + SRS.A_60' 
 cfa_dis_on_dis = cfa(cfa_mdl,data=SRS_discovery)
 fitmeasures(cfa_dis_on_dis,fit.measures="all",output = "text")
 cfa_dis_on_rep = cfa(cfa_mdl,data=SRS_replication)
 fitmeasures(cfa_dis_on_rep,fit.measures="all",output = "text")
+

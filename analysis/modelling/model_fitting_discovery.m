@@ -152,5 +152,5 @@ fs = filesep;
 outdir = ['.',fs,'discovery',fs];
 load(['..',fs,'..',fs,'data',fs,'Study1',fs,'data_modelfit_discovery.mat']);
 
-config.maxiter = 100;
+config.maxiter = 30;
 cbm_hbi(data_discovery,{@LL_IntDynArb},{[outdir,'lap_IntDynArb_discovery.mat']}, [outdir,'hbi_IntDynArb_discovery.mat'], config);
