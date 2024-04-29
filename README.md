@@ -15,6 +15,8 @@ The code and stimuli used in this demo are available in the /task/OL_task_demo_c
 
 **Summary of all variables:** AllVars_.csv (for the linear regression)
 
+Note that to keep the data anonymous, we removed the ID info from the shared spreadsheet. However, the order of the participant samples in all the data files are consistent.
+
 ### analysis folder
 **model_free analysis:** codes and outputs of the model-free analysis, including calculation of the accuracy and emulation propensity under each uncertainty condition.
 
