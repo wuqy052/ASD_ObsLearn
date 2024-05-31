@@ -1,0 +1,991 @@
+---
+title: "All_figures_R"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+```
+
+```{r package}
+rm(list=ls())
+library(ggplot2)
+library(tidyverse)
+library(ggsignif)
+library(readxl)
+library(ggtext)
+library(ggprism)
+library(gtable)
+library(gridExtra)
+library(grid)
+library(stats)
+library(psych)
+library(GPArotation)
+library(lavaan)
+library(parameters)
+```
+
+# Main text figures
+
+## Fig 1
+
+```{r Fig1c, warning = FALSE, message = FALSE}
+# Fig 1c: emulation propensity by uncertainty
+# discovery sample
+data_ori <- read_csv("source_data/uncertain_acc_emprop_violin_original.csv")
+errbar_lims <- group_by(data_ori, Uncertainty) %>% 
+  summarize(mean=mean(EM_prop), sd=sd(EM_prop), 
+            upper=mean+sd, lower=mean-sd)
+p_emprop_ori <- ggplot() +
+  geom_violin(data=data_ori,  aes(x=Uncertainty, y=EM_prop, fill = Uncertainty)) +
+  geom_point(data=errbar_lims, aes(x=Uncertainty, y=mean), size=1)+
+  geom_errorbar(aes(x=errbar_lims$Uncertainty, ymax=errbar_lims$upper, 
+                    ymin=errbar_lims$lower), stat='identity', width=.1) +
+  geom_signif(data=data_ori,aes(x=Uncertainty, y=EM_prop),comparisons = list(c("High", "Low")), annotations="italic(p)<0.0001",
+              parse=TRUE,map_signif_level=TRUE,y_position = 1.02,textsize=4)+
+  scale_fill_brewer(palette="Reds")+
+  labs(title="Discovery Sample",x="Uncertainty", y = "Emulation Propensity") +
+  scale_y_continuous(limits = c(0,1.1), breaks=seq(0,1,by=0.25))+
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+# replication sample
+data_rep <- read_csv("source_data/uncertain_acc_emprop_violin_original.csv")
+errbar_lims <- group_by(data_rep, Uncertainty) %>% 
+  summarize(mean=mean(EM_prop), sd=sd(EM_prop), 
+            upper=mean+sd, lower=mean-sd)
+p_emprop_rep <- ggplot() +
+  geom_violin(data=data_rep,  aes(x=Uncertainty, y=EM_prop, fill = Uncertainty)) +
+  geom_point(data=errbar_lims, aes(x=Uncertainty, y=mean), size=1) +
+  geom_errorbar(aes(x=errbar_lims$Uncertainty, ymax=errbar_lims$upper, 
+                    ymin=errbar_lims$lower), stat='identity', width=.1) +
+  geom_signif(data=data_rep,aes(x=Uncertainty, y=EM_prop),comparisons = list(c("High", "Low")), annotations="italic(p)==0.008",
+              parse=TRUE,map_signif_level=TRUE,y_position = 1.01)+
+  labs(title="Replication Sample",x="Uncertainty", y = "Emulation Propensity") +
+  scale_y_continuous(limits = c(0, 1.1),breaks=seq(0,1,by=0.25))+
+  scale_fill_brewer(palette="Reds") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+ggsave("Fig1c_1.jpeg",plot =p_emprop_ori,path = "output",
+       width = 90,height = 100, units = "mm",dpi=300)
+ggsave("Fig1c_2.jpeg",plot =p_emprop_rep,path = "output",
+       width = 90,height = 100, units = "mm",dpi=300)
+
+```
+
+## Fig 2
+
+```{r Fig2b}
+# Fig 2b: Silhouette score
+rm(list=ls())
+silhouette <- read_excel("source_data/silhouette.xlsx")
+# discovery sample
+p_Sil_ori <- ggplot(data=silhouette,  aes(x=Cluster, y=Original)) +
+  geom_line(color="black") +
+  labs(title="Discovery Sample",x="Number of clusters", y = "Silhouette score") +
+  geom_vline(xintercept=4, linetype="dashed", color = "#D05353")+
+  ylim(0.5,0.65)+
+  theme_classic() +
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text.x = element_text(size = 14), axis.text.y = element_text(size=14))
+
+# replication sample
+p_Sil_rep <- ggplot(data=silhouette,  aes(x=Cluster, y=Replication)) +
+  geom_line(color="black") +
+  geom_vline(xintercept=4, linetype="dashed", color = "#D05353")+
+  labs(title="Replication Sample",x="Number of clusters", y = "Silhouette score") +
+  ylim(0.5,0.65)+
+  theme_classic() +
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text.x = element_text(size = 14), axis.text.y = element_text(size=14))
+
+ggsave("Fig2b_1.jpeg",plot =p_Sil_ori,path = "output",
+       width = 90,height = 70, units = "mm",dpi=300)
+ggsave("Fig2b_2.jpeg",plot =p_Sil_rep,path = "output",
+       width = 90,height = 70, units = "mm",dpi=300)
+```
+
+```{r Fig2c}
+# Fig 2c: Behavioral characterizations of clusters
+# helper plotting function
+plot_bar_dots_clustering <- function(data_final, groupname,fillcol, plot_title) {
+  data_cluster = filter(data_final,cluster_group == groupname)
+  errbar_lims <- group_by(data_cluster, Measure) %>% 
+    summarize(mean=mean(value), sd=sd(value)/sqrt(length(value)), 
+              upper=mean+sd, lower=mean-sd)
+  p <- ggplot() +
+    geom_bar(stat = "Identity",data=errbar_lims,  aes(x=Measure, y=mean),fill=fillcol,color="black",linewidth=0.4) +
+    geom_jitter(data=data_cluster,aes(x=Measure,y=value),width = 0.2, size = 1, color = "gray",alpha=0.3) +
+    geom_errorbar(aes(x=errbar_lims$Measure, ymax=errbar_lims$upper, 
+                      ymin=errbar_lims$lower), stat='identity', width=.1) +
+    labs(title=plot_title,x=" ", y = Pseudo~R^2) +
+    scale_x_discrete(
+      breaks=c('nonhbi_R2_Baseline','nonhbi_R2_Imi','nonhbi_R2_Emu',
+               'nonhbi_R2_FixSingle',"nonhbi_R2_DynFix"),
+      labels=c("NonLearn", "Imitation","Emulation","Fix-Single","Dyn-Fix"))+
+    ylim(-0.1,0.8)+
+    theme_classic()+
+    theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+          axis.text.x = element_text(size = 14,angle = 45,vjust = 0.8, hjust=0.8), axis.text.y = element_text(size=14))
+  return(p)  
+}
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+# preprocess the data
+data_final <- data_ori %>% select('nonhbi_R2_Baseline','nonhbi_R2_Imi','nonhbi_R2_Emu',
+                                  'nonhbi_R2_FixSingle','nonhbi_R2_DynFix','cluster_group') %>%
+  reshape2::melt(id.var = c('cluster_group'),
+                 variable.name = 'Measure')
+# Non-learning group
+p_NonLearn_ori = plot_bar_dots_clustering(data_final,"NonLearn","#F9DB60","Non-learning (28%)")
+# Imitation group
+p_Imi_ori = plot_bar_dots_clustering(data_final,"Imitation","#9CD08F","Imitation (9%)")
+# Emulation group
+p_Emu_ori = plot_bar_dots_clustering(data_final,"Emulation","#DBBADD","Emulation (48%)")
+# Mixture group
+p_Mix_ori = plot_bar_dots_clustering(data_final,"Mixture","#A8E0FF","Mixture (15%)")
+
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+# preprocess the data
+data_final <- data_rep %>% select('nonhbi_R2_Baseline','nonhbi_R2_Imi','nonhbi_R2_Emu',
+                                  'nonhbi_R2_FixSingle','nonhbi_R2_DynFix','cluster_group') %>%
+  reshape2::melt(id.var = c('cluster_group'),
+                 variable.name = 'Measure')
+# Non-learning group
+p_NonLearn_rep = plot_bar_dots_clustering(data_final,"NonLearn","#F9DB60","Non-learning (26%)")
+# Imitation group
+p_Imi_rep = plot_bar_dots_clustering(data_final,"Imitation","#9CD08F","Imitation (15%)")
+# Emulation group
+p_Emu_rep = plot_bar_dots_clustering(data_final,"Emulation","#DBBADD","Emulation (37%)")
+# Mixture group
+p_Mix_rep = plot_bar_dots_clustering(data_final,"Mixture","#A8E0FF","Mixture (22%)")
+
+# save
+ggsave("Fig2c1_1.jpeg",plot =p_NonLearn_ori,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c1_2.jpeg",plot =p_Imi_ori,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c1_3.jpeg",plot =p_Emu_ori,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c1_4.jpeg",plot =p_Mix_ori,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c2_1.jpeg",plot =p_NonLearn_rep,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c2_2.jpeg",plot =p_Imi_rep,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c2_3.jpeg",plot =p_Emu_rep,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+ggsave("Fig2c2_4.jpeg",plot =p_Mix_rep,path = "output",
+       width = 75,height = 90, units = "mm",dpi=300)
+```
+
+## Fig 3
+
+```{r Fig3a}
+# Fig. 3a: histogram of SRS distribution
+rm(list=ls())
+# discovery sample
+data_dis <- read_csv("../data/Study1/AllVars_discovery.csv")
+p_hist_ori<-ggplot(data_dis,aes(x=SRS)) + 
+  geom_histogram(color="white", fill="#D5DDBC",binwidth = 5)+
+  geom_vline(xintercept=mean(data_dis$SRS), linetype="dashed", color = "#D05353")+
+  labs(title="Discovery Sample",x="SRS Total Score", y = "Count") +
+  xlim(0,180)+
+  theme_classic()+
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text.x = element_text(size = 14,vjust = 0.4, hjust=0.05), axis.text.y = element_text(size=14))
+cat(c('mean = ', mean(data_dis$SRS)) ,'sd = ',(sd(data_dis$SRS)))
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+p_hist_rep<-ggplot(data_rep,aes(x=SRS)) + 
+  geom_histogram(color="white", fill="#D5DDBC",binwidth = 5)+
+  geom_vline(xintercept=mean(data_rep$SRS), linetype="dashed", color = "#D05353")+
+  labs(title="Replication Sample",x="SRS Total Score", y = "Count") +
+  xlim(0,180)+
+  theme_classic()+
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text.x = element_text(size = 14,vjust = 0.4, hjust=0.05), axis.text.y = element_text(size=14))
+cat(c('mean = ', mean(data_rep$SRS)) ,'sd = ',(sd(data_rep$SRS)))
+
+
+ggsave("Fig3a_2.jpeg",plot =p_hist_rep,path = "output",
+       width = 100,height = 80, units = "mm",limitsize = FALSE,dpi=300)
+ggsave("Fig3a_1.jpeg",plot =p_hist_ori,path = "output",
+       width = 100,height = 80, units = "mm",limitsize = FALSE,dpi=300)
+
+```
+
+```{r Fig3b}
+# Fig. 3b: loading on Factor 1
+factor_loadings <- read_csv("source_data/factor_loading_figure.csv")
+data_f1 <- factor_loadings %>% 
+  filter(final == "1") 
+f1 <-ggplot(data=data_f1, aes(x=reorder(question,-order), y=Factor1,fill=Subscale))+
+  geom_bar(stat="identity")+
+  coord_flip()+
+  labs(x ="SRS item", y = "Loading on Factor 1",title = "Item Loadings on Factor 1")+
+  theme_classic()+
+  theme(legend.text = element_text (size=12),legend.title = element_text (size=14),legend.position ="none",
+        plot.title=element_text(size=22),axis.text = element_text(size= 14),axis.title=element_text(size=18))+ 
+  scale_fill_manual(values = c("#6689A1", "#FEC09A", "#A6C48A","#F6E7CB","#D78370"))+
+  scale_y_continuous(breaks=seq(0,1,by=0.25),limits=(c(0,1.1)))+
+  guides(fill=guide_legend(nrow=5,byrow =TRUE))
+
+ggsave("Fig3b.jpeg",plot =f1,path = "output",
+       width = 260,height = 200, units = "mm",dpi=300)
+
+```
+
+
+## Fig 4
+
+```{r Fig4a}
+rm(list=ls())
+# Fig 4A: Emulation propensity ~ autism-like traits
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+# discovery sample
+p_EMprop_ori <- ggplot(data_ori, aes(x=SRS_F1, y=EM_prop)) + 
+  geom_point(size=2, color="#DBBADD",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Discovery Sample",x="SRS Factor 1", y = "Emulation Propensity") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+# replication sample
+p_EMprop_rep <- ggplot(data_rep, aes(x=SRS_F1, y=EM_prop)) + 
+  geom_point(size=2, color="#DBBADD",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Replication Sample",x="SRS Factor 1", y = "Emulation Propensity") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+ggsave("Fig4a_1.jpeg",plot =p_EMprop_ori,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+ggsave("Fig4a_2.jpeg",plot =p_EMprop_rep,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+```
+
+
+```{r Fig4b}
+# Fig 4B: violin plot comparing F1 across OL strategy subgroups
+# discovery sample
+data_ori$cluster_group <- factor(data_ori$cluster_group , levels=c("NonLearn", "Imitation", "Emulation", "Mixture"))
+errbar_lims <- group_by(data_ori, cluster_group) %>% 
+  summarize(mean=mean(SRS_F1), sd=sd(SRS_F1), 
+            upper=mean+sd, lower=mean-sd)
+p_F1clust_ori <- ggplot() +
+  geom_violin(data=data_ori,  aes(x=cluster_group, y=SRS_F1, fill = cluster_group)) +
+  geom_point(data=errbar_lims, aes(x=cluster_group, y=mean), size=1) +
+  geom_errorbar(aes(x=errbar_lims$cluster_group, ymax=errbar_lims$upper, 
+                    ymin=errbar_lims$lower), stat='identity', width=.1) +
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "NonLearn")), annotations="italic(p)<0.0001",
+              parse=TRUE,map_signif_level=TRUE,y_position = 6.2,textsize=3.5,vjust=0)+
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "Imitation")), annotations="italic(p)==0.005",
+              parse=TRUE,map_signif_level=TRUE,y_position = 5,textsize=3.5,vjust=0)+
+  labs(title="Discovery Sample",x=" ", y = "SRS Factor 1") +
+  ylim(-2.5,7) +
+  scale_fill_manual(values=c("#F9DB60", "#9CD08F", "#DBBADD","#A8E0FF"))+
+  scale_x_discrete(
+    breaks=c('NonLearn','Imitation','Emulation','Mixture'),
+    labels=c("Non-learning", "Imitation","Emulation","Mixture"))+
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14,angle = 20,vjust = 0.8, hjust=0.8))
+
+# replication sample
+data_rep$cluster_group <- factor(data_rep$cluster_group , levels=c("NonLearn", "Imitation", "Emulation", "Mixture"))
+errbar_lims <- group_by(data_rep, cluster_group) %>% 
+  summarize(mean=mean(SRS_F1), sd=sd(SRS_F1), 
+            upper=mean+sd, lower=mean-sd)
+p_F1clust_rep <- ggplot() +
+  geom_violin(data=data_rep,  aes(x=cluster_group, y=SRS_F1, fill = cluster_group)) +
+  geom_point(data=errbar_lims, aes(x=cluster_group, y=mean), size=1) +
+  geom_errorbar(aes(x=errbar_lims$cluster_group, ymax=errbar_lims$upper, 
+                    ymin=errbar_lims$lower), stat='identity', width=.1) +
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "NonLearn")), annotations="italic(p)<0.0001",
+              parse=TRUE,map_signif_level=TRUE,y_position = 10,textsize=3.5,vjust=0)+
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "Imitation")), annotations="italic(p)==0.006",
+              parse=TRUE,map_signif_level=TRUE,y_position = 7.5,textsize=3.5,vjust=0)+
+  labs(title="Replication Sample",x=" ", y = "SRS Factor 1") +
+  ylim(-6,12) +
+  scale_fill_manual(values=c("#F9DB60", "#9CD08F", "#DBBADD","#A8E0FF"))+
+  scale_x_discrete(
+    breaks=c('NonLearn','Imitation','Emulation','Mixture'),
+    labels=c("Non-learning", "Imitation","Emulation","Mixture"))+
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14,angle = 20,vjust = 0.8, hjust=0.8))
+
+ggsave("Fig4b_1.jpeg",plot =p_F1clust_ori,path = "output",
+       width = 95,height = 83, units = "mm",dpi=300)
+ggsave("Fig4b_2.jpeg",plot =p_F1clust_rep,path = "output",
+       width = 95,height = 83, units = "mm",dpi=300)
+```
+
+```{r Fig4c}
+# Fig. 4C: Emulation bias ~ autism-like traits
+# discovery sample
+p_bias_ori <- ggplot(data_ori, aes(x=SRS_F1, y=IntDyn_hbi_bias)) + 
+  geom_point(size=2, color="#DBBADD",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Discovery Sample",x="SRS Factor 1", y = "Emulation Bias") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+# replication sample
+p_bias_rep <- ggplot(data_rep, aes(x=SRS_F1, y=IntDyn_hbi_bias)) + 
+  geom_point(size=2, color="#DBBADD",alpha=0.6)+
+  geom_smooth(method=lm,formula = 'y ~ x', color="black", fill="grey",size=0.8)+
+  labs(title="Replication Sample",x="SRS Factor 1", y = "Emulation Bias") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+ggsave("Fig4c_1.jpeg",plot =p_bias_ori,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+ggsave("Fig4c_2.jpeg",plot =p_bias_rep,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+```
+
+
+## Fig 5
+
+```{r Fig5a, echo=FALSE}
+rm(list=ls())
+# Fig 5a: Predict F1 using EM_prop
+# discovery sample
+data_F1_EMprop_1 <- read_excel("source_data/regression_effects.xlsx",sheet = 'asd_emprop_1')
+data_F1_EMprop_1$Var = factor(data_F1_EMprop_1$Var , levels=c("Gender","Age", "2-Step task","Emulation propensity"))
+p_F1_EMprop_1 <- ggplot(data = data_F1_EMprop_1) +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=0.3,size =1, color = "#FEB486") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#FD7521") +
+  add_pvalue(data_F1_EMprop_1,x = "Var", xmin = "Var",label="sig",
+             y.position = c(0.5,0.5,0.5,0.5),remove.bracket = TRUE,
+             label.size = 5)+
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  coord_flip()+
+  labs(title="Discovery Sample",y="Main effects", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+# replication 
+data_F1_EMprop_2 <- read_excel("source_data/regression_effects.xlsx",sheet = 'asd_emprop_2')
+data_F1_EMprop_2$Var = factor(data_F1_EMprop_2$Var , levels=c("Gender","Age", "Working memory","Reasoning","Emulation propensity"))
+p_F1_EMprop_2 <- ggplot(data = data_F1_EMprop_2) +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1, color = "#FEB486") +
+  geom_point( aes(x=Var, y=Main), size=3,shape=15,color = "#FD7521") +
+  add_pvalue(data_F1_EMprop_2,x = "Var", xmin = "Var",label="sig",
+             y.position = c(0.8,0.8,0.8,0.8,0.8),remove.bracket = TRUE,
+             label.size = 5)+
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  coord_flip()+
+  labs(title="Replication Sample",y="Main effects", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+ggsave("Fig5a_2.jpeg",plot =p_F1_EMprop_2,path = "output",
+       width = 140,height = 70, units = "mm",dpi=300)
+ggsave("Fig5a_1.jpeg",plot =p_F1_EMprop_1,path = "output",
+       width = 140,height = 70, units = "mm")
+```
+
+```{r Fig5b}
+# Fig 5B: Predict F1 using EM bias
+# discovery sample
+data_F1_bias_1 <- read_excel("source_data/regression_effects.xlsx",sheet = 'asd_bias_1')
+data_F1_bias_1$Var = factor(data_F1_bias_1$Var , levels=c("Gender","Age", "2-Step score",
+                                                            "Sticky color","Sticky action","Color bias 2","Color bias 1",
+                                                            "Action bias","Emulation bias","Uncertainty weight","Beta"))
+p_F1_bias_1 <- ggplot(data = data_F1_bias_1) +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1, color = "#FEB486") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#FD7521") +
+  add_pvalue(data_F1_bias_1,x = "Var", xmin = "Var",label="sig",
+             y.position = c(1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5,1.5),remove.bracket = TRUE,
+             label.size = 5)+
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  ylim(-2,1.5)+
+  coord_flip()+
+  labs(title="Discovery Sample",y="Main effects", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+# replication sample
+data_F1_bias_2 <- read_excel("source_data/regression_effects.xlsx",sheet = 'asd_bias_2')
+data_F1_bias_2$Var = factor(data_F1_bias_2$Var , levels=c("Gender","Age", "Working memory","Reasoning",
+                                                          "Sticky color","Sticky action","Color bias 2","Color bias 1",
+                                                          "Action bias","Emulation bias","Uncertainty weight","Beta"))
+p_F1_bias_2 <- ggplot(data = data_F1_bias_2) +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1, color = "#FEB486") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#FD7521") +
+  add_pvalue(data_F1_bias_2,x = "Var", xmin = "Var",label="sig",
+             y.position = c(2,2,2,2,2,2,2,2,2,2,2,2),remove.bracket = TRUE,
+             label.size = 5)+
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  ylim(-2,2)+
+  coord_flip()+
+  labs(title="Replication Sample",y="Main effects", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+ggsave("Fig5b_1.jpeg",plot =p_F1_bias_1,path = "output",
+       width = 140,height = 120, units = "mm")
+ggsave("Fig5b_2.jpeg",plot =p_F1_bias_2,path = "output",
+       width = 140,height = 120, units = "mm",dpi=300)
+
+```
+
+## Fig. 6
+
+```{r Fig6a}
+# Fig. 6a: Predict F1 using EM_prop
+# discovery sample
+data_EMprop_F1_1 <- read_excel("source_data/regression_effects.xlsx",sheet = 'emprop_asd_1')
+data_EMprop_F1_1$Var = factor(data_EMprop_F1_1$Var , levels=c("Social anxiety", "SRS Factor 1"))
+p_EMprop_F1_1 <- ggplot(data = data_EMprop_F1_1) +
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1,color = "#9BCBE8") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#489FD5") +
+  add_pvalue(data_EMprop_F1_1,x = "Var", xmin = "Var",label="sig",
+             y.position = c(1,1),remove.bracket = TRUE,
+             label.size = 5)+
+  scale_y_continuous(breaks=seq(-2,1,by=1),limits=c(-2,1))+
+  coord_flip()+
+  labs(title="Discovery Sample",y="Main effects on emulation propensity", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+# replication sample
+data_EMprop_F1_2 <- read_excel("source_data/regression_effects.xlsx",sheet = 'emprop_asd_2')
+data_EMprop_F1_2$Var = factor(data_EMprop_F1_2$Var , levels=c("Social anxiety",
+                                                              "SRS Factor 1"))
+p_EMprop_F1_2 <- ggplot(data = data_EMprop_F1_2) +
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1,color = "#9BCBE8") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#489FD5") +
+  add_pvalue(data_EMprop_F1_2,x = "Var", xmin = "Var",label="sig",
+             y.position = c(1,1),remove.bracket = TRUE,
+             label.size = 5)+
+  scale_y_continuous(breaks=seq(-3,1,by=1),limits=c(-3,1))+
+  coord_flip()+
+  labs(title="Replication Sample",y="Main effects on emulation propensity", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+
+ggsave("Fig6a_1.jpeg",plot =p_EMprop_F1_1,path = "output",
+  width = 150,height = 60, units = "mm")
+ggsave("Fig6a_2.jpeg",plot =p_EMprop_F1_2,path = "output",
+       width = 150,height = 60, units = "mm",dpi=300)
+```
+
+```{r Fig 6b}
+# Fig 6b: Predict F1 using bias
+# discovery sample
+data_bias_F1_1 <- read_excel("source_data/regression_effects.xlsx",sheet = 'bias_asd_1')
+data_bias_F1_1$Var = factor(data_bias_F1_1$Var , levels=c("Social anxiety",
+                                                              "SRS Factor 1"))
+p_bias_F1_1 <- ggplot(data = data_bias_F1_1) +
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1,color = "#9BCBE8") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#489FD5") +
+  add_pvalue(data_EMprop_F1_1,x = "Var", xmin = "Var",label="sig",
+             y.position = c(1,1),remove.bracket = TRUE,
+             label.size = 5)+
+  scale_y_continuous(breaks=seq(-2,1,by=1),limits=c(-2,1))+
+  coord_flip()+
+  labs(title="Discovery Sample",y="Main effects on emulation bias", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+# replication sample
+data_bias_F1_2 <- read_excel("source_data/regression_effects.xlsx",sheet = 'bias_asd_2')
+data_bias_F1_2$Var = factor(data_bias_F1_2$Var , levels=c( "Social anxiety",
+                                                          "SRS Factor 1"))
+p_bias_F1_2 <- ggplot(data = data_bias_F1_2) +
+  geom_hline(yintercept = 0,linetype='dashed',color="black") +
+  geom_errorbar(aes(x=Var, ymax=Upper, 
+                    ymin=Lower), stat='identity', width=.3,size =1,color = "#9BCBE8") +
+  geom_point(aes(x=Var, y=Main), size=3,shape=15,color = "#489FD5") +
+  add_pvalue(data_bias_F1_2,x = "Var", xmin = "Var",label="sig",
+             y.position = c(1.5,1.5),remove.bracket = TRUE,
+             label.size = 5)+
+  scale_y_continuous(breaks=seq(-3,1,by=1),limits=c(-3,1.5))+
+  coord_flip()+
+  labs(title="Replication Sample",y="Main effects on emulation bias", x = " ") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+
+ggsave("Fig6b_1.jpeg",plot =p_bias_F1_1,path = "output",
+       width = 150,height = 60, units = "mm")
+ggsave("Fig6b_2.jpeg",plot =p_bias_F1_2,path = "output",
+       width = 150,height = 60, units = "mm",dpi=300)
+
+```
+
+
+# Extended Data Figures
+
+## Extended Data Fig. 2
+
+```{r FigE2}
+# Extended Data Fig. 2: 2D paired correlations among 5 dimensions
+varnames = c("nonhbi_R2_Baseline","nonhbi_R2_Imi","nonhbi_R2_Emu","nonhbi_R2_FixSingle","nonhbi_R2_DynFix")
+labelnames = c(expression("R"^2~"NonLearn"),expression("R"^2~"Imitation"),expression("R"^2~"Emulation"),
+               expression("R"^2~"Fix-Single"),expression("R"^2~"Dyn-Fix"))
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+k=0
+pvec = list()
+for (i in 1:4) {
+  for (j in (i+1):5){
+    k=k+1
+    p<- ggplot(data_ori, aes_string(x=varnames[i], y=varnames[j],color="cluster_group")) +
+      geom_point(size=2,alpha=0.8)+
+      labs(title=" ",x=labelnames[i], y = labelnames[j]) +
+      theme_classic()+
+      scale_color_manual(values = c("#F9DB60","#9CD08F","#DBBADD","#A8E0FF"),labels=c('NonLearn','Imitation','Emulation','Mixture'))+
+      scale_x_continuous(breaks = scales::pretty_breaks(n = 4))+
+      theme(legend.position = "none",axis.title=element_text(size=16),
+            axis.text.x = element_text(size = 14), axis.text.y = element_text(size=14))
+    pvec[[k]] <- p
+  }
+}
+
+p_all_2D_ori <- grid.arrange(
+  pvec[[1]],pvec[[2]],pvec[[3]],pvec[[4]],pvec[[5]],pvec[[6]],pvec[[7]],pvec[[8]],pvec[[9]],pvec[[10]],
+  nrow = 4
+)
+
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+k=0
+pvec = list()
+for (i in 1:4) {
+  for (j in (i+1):5){
+    k=k+1
+    p<- ggplot(data_rep, aes_string(x=varnames[i], y=varnames[j],colour="cluster_group")) +
+      geom_point(size=2,alpha=0.8)+
+      labs(title=" ",x=labelnames[i], y = labelnames[j]) +
+      theme_classic()+
+      scale_color_manual(values = c("#A8E0FF","#F9DB60","#DBBADD","#9CD08F"),labels=c('Arbitration', 'NonLearn','Emulation','Imitation'))+
+      scale_x_continuous(breaks = scales::pretty_breaks(n = 4))+
+      theme(legend.position = "none",axis.title=element_text(size=16),
+            axis.text.x = element_text(size = 14), axis.text.y = element_text(size=14))
+    pvec[[k]] <- p
+  }
+}
+p_all_2D_rep <- grid.arrange(
+  pvec[[1]],pvec[[2]],pvec[[3]],pvec[[4]],pvec[[5]],pvec[[6]],pvec[[7]],pvec[[8]],pvec[[9]],pvec[[10]],
+  nrow = 4
+)
+
+
+ggsave("FigE2_1.jpeg",plot =p_all_2D_ori,path = "output",
+       width = 230,height = 200, dpi = 600, units = "mm")
+ggsave("FigE2_2.jpeg",plot =p_all_2D_rep,path = "output",
+       width = 230,height = 200, units = "mm")
+```
+
+
+## Extended Data Fig. 3
+
+```{r FigE3a}
+rm(list=ls())
+# Extended Data Fig. 3a: parallel analysis scree plot
+SRS_item <- read_csv("../data/Study1/SRS_items_discovery.csv")
+res_parallel <- fa.parallel(SRS_item, fm='minres', fa='fa')
+data_paral = tibble(num_fa = 1:15, fa_actual = res_parallel$fa.values[1:15], fa_resamp = res_parallel$fa.simr[1:15])
+colors <- c("Actual data" = "black", "Resampled data" = "#678D58")
+p_parel <- ggplot(data=data_paral) +
+  geom_line(aes(x=num_fa, y = fa_actual,color="Actual data")) +
+  geom_line(aes(x=num_fa, y = fa_resamp,color = "Resampled data"))+
+  labs(title="Parallel Analysis",x="Number of factors", y = "Eigen values",color = "Legend") +
+  geom_vline(xintercept = 8, linetype="dashed",color = "#D05353")+
+  theme_classic() +
+  theme(legend.position = c(0.8, 0.5),legend.title = element_blank(),legend.text = element_text(size=14),
+        plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text.x = element_text(size = 14), axis.text.y = element_text(size=14))+
+  scale_color_manual(values = colors)
+
+ggsave("FigE3a.jpeg",plot =p_parel,path = "output",
+       width = 120,height = 105, units = "mm",limitsize = FALSE, dpi=300)
+```
+
+
+```{r FigE3b}
+# Extended Fig. 3b: Explained variance by each factor
+var_exp = c(0,0.2,0.268,0.315,0.349,0.374,0.397,0.418,0.437)*100
+p_EV <- ggplot() +
+  geom_line(aes(x=c(0:8), y = var_exp)) +
+  labs(title="Factor Explained Variance",x="Number of factors", y = "Cumulative Variance (%)") +
+  theme_classic() +
+  scale_x_continuous(breaks=c(0:8)) +
+  ylim(0,50) + 
+  theme(legend.position = c(0.8, 0.5),legend.title = element_blank(),legend.text = element_text(size=14),
+        plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text.x = element_text(size = 14), axis.text.y = element_text(size=14))
+
+ggsave("FigE3b.jpeg",plot =p_EV,path = "output",
+       width = 120,height = 105, units = "mm",limitsize = FALSE, dpi=300)
+```
+
+## Extended Data Fig. 4
+
+```{r FigE4}
+rm(list=ls())
+# Extended Data Fig. 4: visualize all factors
+factor_full = read_csv("source_data/factor_full_vis.csv")
+p_factors <- ggplot(factor_full, aes(fct_inorder(text), abs(loadings), fill=loadings)) +
+  facet_wrap(~ name, nrow=1) + #place the factors in separate facets
+  geom_bar(stat="identity") + #make the bars
+  coord_flip() + #flip the axes so the test names can be horizontal  
+  scale_x_discrete(limits=rev) +
+  scale_y_continuous(breaks=c(0, 0.25, 0.5,0.75,1), labels=c('0','0.25','0.5','0.75','1'))+
+  scale_fill_gradient2(name = "Loading",
+                       high = "darkorange1", mid = "white", low = "darkturquoise",
+                       midpoint=0, guide='none') +
+  ylab("Loading Strength") + xlab('') + 
+  theme_bw(base_size=15) + 
+  theme(strip.text.x = element_text(size = 20, colour = "black"),axis.title = element_text(size=22),
+        axis.text.y = element_text(size=15,colour="black"),plot.title = element_text(size = 22, face = "bold"),
+        axis.text.x = element_text(size=14,colour="black"))
+
+ggsave("FigE4.jpeg",plot =p_factors,path = "output",
+       width = 500,height = 400, units = "mm",limitsize = FALSE,dpi=300)
+
+```
+
+
+## Extended Data Fig. 5
+
+```{r FigE5a}
+# Extended Fig. 5a arbitration propensity ~ autism-like traits
+rm(list=ls())
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+p_ARBprop_ori <- ggplot(data_ori, aes(x=SRS_F1, y=EM_prop_diff)) + 
+  geom_point(size=3, color="#A8E0FF",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Discovery Sample",x="SRS Factor 1", y = "Arbitration Propensity") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+p_ARBprop_rep <- ggplot(data_rep, aes(x=SRS_F1, y=EM_prop_diff)) + 
+  geom_point(size=3, color="#A8E0FF",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Replication Sample",x="SRS Factor 1", y = "Arbitration Propensity") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+
+ggsave("FigE5a_1.jpeg",plot =p_ARBprop_ori,path = "output",
+       width = 130,height = 110, units = "mm",dpi=300)
+ggsave("FigE5a_2.jpeg",plot =p_ARBprop_rep,path = "output",
+       width = 130,height = 110, units = "mm",dpi=300)
+
+```
+
+
+```{r FigE5b}
+# Extended Fig. 5a eta parameter ~ autism-like traits
+rm(list=ls())
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+p_eta_ori <- ggplot(data_ori, aes(x=SRS_F1, y=IntDyn_hbi_wUnc)) + 
+  geom_point(size=3, color="#A8E0FF",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Discovery Sample",x="SRS Factor 1", y = "Uncertainty Weight") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+p_eta_rep <- ggplot(data_rep, aes(x=SRS_F1, y=IntDyn_hbi_wUnc)) + 
+  geom_point(size=3, color="#A8E0FF",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",size=0.8)+
+  labs(title="Replication Sample",x="SRS Factor 1", y = "Uncertainty Weight") +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+
+ggsave("FigE5b_2.jpeg",plot =p_eta_rep,path = "output",
+       width = 130,height = 110, units = "mm",dpi=300)
+ggsave("FigE5b_1.jpeg",plot =p_eta_ori,path = "output",
+       width = 130,height = 110, units = "mm",dpi=300)
+```
+
+
+# Supplementary Figures
+
+## Supplementary Fig. S6
+
+```{r FigS6a}
+# Fig S6a: emulation pseudo R2 ~ F1
+rm(list=ls())
+# Note that here we make the rank ordered plot because we used Spearman's correlation
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+data_ori$F1_ranked <- rank(data_ori$SRS_F1)
+data_ori$R2_Emu_ranked <- rank(data_ori$nonhbi_R2_Emu)
+p_r2emu_ori <- ggplot(data_ori, aes(x=F1_ranked, y=R2_Emu_ranked)) + 
+  geom_point(size=2, color="#DBBADD",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
+  labs(title="Discovery Sample",x="SRS Factor 1", y = expression('R'^2*' of Emulation Model')) +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+data_rep$F1_ranked <- rank(data_rep$SRS_F1)
+data_rep$R2_Emu_ranked <- rank(data_rep$nonhbi_R2_Emu)
+p_r2emu_rep <- ggplot(data_rep, aes(x=F1_ranked, y=R2_Emu_ranked)) + 
+  geom_point(size=2, color="#DBBADD",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
+  labs(title="Replication Sample",x="SRS Factor 1", y = expression('R'^2*' of Emulation Model')) +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+
+ggsave("FigS6a_1.jpeg",plot =p_r2emu_ori,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+ggsave("FigS6a_2.jpeg",plot =p_r2emu_rep,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+
+```
+
+```{r FigS6b}
+# Fig. S6b: imitation pseudo R2 ~ F1
+rm(list=ls())
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+data_ori$F1_ranked <- rank(data_ori$SRS_F1)
+data_ori$R2_Imi_ranked <- rank(data_ori$nonhbi_R2_Imi)
+p_r2imi_ori <- ggplot(data_ori, aes(x=F1_ranked, y=R2_Imi_ranked)) + 
+  geom_point(size=2, color="#9CD08F",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
+  labs(title="Discovery Sample",x="SRS Factor 1", y = expression('R'^2*' of Imitation Model')) +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+# replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+data_rep$F1_ranked <- rank(data_rep$SRS_F1)
+data_rep$R2_Imi_ranked <- rank(data_rep$nonhbi_R2_Imi)
+p_r2imi_rep <- ggplot(data_rep, aes(x=F1_ranked, y=R2_Imi_ranked)) + 
+  geom_point(size=2, color="#9CD08F",alpha=0.6)+
+  geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
+  labs(title="Replication Sample",x="SRS Factor 1", y = expression('R'^2*' of Imitation Model')) +
+  theme_classic()+ 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+
+ggsave("FigS6b_1.jpeg",plot =p_r2imi_ori,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+ggsave("FigS6b_2.jpeg",plot =p_r2imi_rep,path = "output",
+       width = 95,height = 80, units = "mm",dpi=300)
+```
+
+
+## Supplementary Fig. S7
+
+```{r FigS7}
+# Fig S7: ACC by uncertainty
+# discovery sample
+data_ori <- read_csv("source_data/uncertain_acc_emprop_violin_original.csv")
+errbar_lims <- group_by(data_ori, Uncertainty) %>% 
+  summarize(mean=mean(ACC), sd=sd(ACC), 
+            upper=mean+sd, lower=mean-sd)
+p_acc_ori <- ggplot() +
+  geom_violin(data=data_ori,  aes(x=Uncertainty, y=ACC, fill = Uncertainty)) +
+  geom_point(data=errbar_lims, aes(x=Uncertainty, y=mean), size=1) +
+  geom_errorbar(aes(x=errbar_lims$Uncertainty, ymax=errbar_lims$upper, 
+                    ymin=errbar_lims$lower), stat='identity', width=.1) +
+  geom_signif(data=data_ori,aes(x=Uncertainty, y=ACC),comparisons = list(c("High", "Low")), annotations="italic(p)<0.0001",parse=TRUE,
+              map_signif_level=TRUE,y_position =1.01,textsize=4)+
+  labs(title="Discovery Sample",x="Uncertainty", y = "Accuracy") +
+  scale_y_continuous(breaks=seq(0,1,by=0.25),limits=c(0,1.13))+
+  scale_fill_brewer(palette="Blues") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+# replication sample
+data_rep <- read_csv("source_data/uncertain_acc_emprop_violin_replication.csv")
+# acc by uncertainty
+errbar_lims <- group_by(data_rep, Uncertainty) %>% 
+  summarize(mean=mean(ACC), sd=sd(ACC), 
+            upper=mean+sd, lower=mean-sd)
+p_acc_rep <- ggplot() +
+  geom_violin(data=data_rep,  aes(x=Uncertainty, y=ACC, fill = Uncertainty)) +
+  geom_point(data=errbar_lims, aes(x=Uncertainty, y=mean), size=1) +
+  geom_errorbar(aes(x=errbar_lims$Uncertainty, ymax=errbar_lims$upper, 
+                    ymin=errbar_lims$lower), stat='identity', width=.1) +
+  geom_signif(data=data_rep,aes(x=Uncertainty, y=ACC),comparisons = list(c("High", "Low")), annotations="italic(p)==0.118",parse=TRUE,
+              map_signif_level=TRUE,y_position = 1.01,textsize=4)+
+  labs(title="Replication Sample",x="Uncertainty", y = "Accuracy") +
+  scale_y_continuous(breaks=seq(0,1,by=0.25),limits=c(0,1.13))+
+  scale_fill_brewer(palette="Blues") +
+  theme_minimal() + 
+  theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=18),axis.title=element_text(size=18),
+        axis.text = element_text(size = 16))
+
+
+ggsave("FigS7_1.jpeg",plot =p_acc_ori,path = "output",
+       width = 90,height = 100, units = "mm",dpi=300)
+ggsave("FigS7_2.jpeg",plot =p_acc_rep,path = "output",
+       width = 90,height = 100, units = "mm")
+```
+
+## Supplementary Fig. S9
+
+```{r FigS9a}
+# helper function, for S9abc
+plot_violin_clustering <- function(data, variable, ylabel,ylim_low,ylim_high){
+  errbar_lims <- group_by(data, cluster_group) %>% 
+    summarize(mean=mean({{variable}},na.rm=TRUE), sd=sd({{variable}},na.rm=TRUE), 
+              upper=mean+sd, lower=mean-sd)
+  p <- ggplot() +
+    geom_violin(data=data,  aes(x=cluster_group, y={{variable}}, fill = cluster_group)) +
+    geom_point(data=errbar_lims, aes(x=cluster_group, y=mean), size=1) +
+    geom_errorbar(aes(x=errbar_lims$cluster_group, ymax=errbar_lims$upper, 
+                      ymin=errbar_lims$lower), stat='identity', width=.1) +
+    labs(title="Discovery Sample",x=" ", y = ylabel) +
+    ylim(ylim_low,ylim_high) +
+    scale_fill_manual(values=c("#F9DB60", "#9CD08F", "#DBBADD","#A8E0FF"))+
+    scale_x_discrete(
+      breaks=c('NonLearn','Imitation','Emulation','Mixture'),
+      labels=c("Non-learning", "Imitation","Emulation","Mixture"))+
+    theme_minimal() + 
+    theme(legend.position = "none",plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+          axis.text = element_text(size = 14))
+  return(p)  
+}
+
+# Fig. S9a: comparing task performance across subgroups
+# discovery sample
+data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
+data_ori$cluster_group <- factor(data_ori$cluster_group , levels=c("NonLearn", "Imitation", "Emulation", "Mixture"))
+p_ACCclust_ori <-  plot_violin_clustering(data_ori, ACC, "Accuracy",0,1)                                 # replication sample
+data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
+# Fig S4A, violin plot comparing Task accuracy across OL subgroups
+data_rep$cluster_group <- factor(data_rep$cluster_group , levels=c("NonLearn", "Imitation", "Emulation", "Mixture"))
+p_ACCclust_rep <-  plot_violin_clustering(data_rep, data_rep$ACC, "Accuracy",0,1)   
+
+
+ggsave("FigS9a_1.jpeg",plot =p_ACCclust_ori,path = "output",
+       width = 130,height = 100, units = "mm",dpi=300)
+ggsave("FigS9a_2.eps",plot =p_ACCclust_rep,path = "output",
+       width = 130,height = 100, units = "mm")
+
+```
+
+```{r FigS9b}
+# Fig S9b: violin plot comparing Emulation propensity across OL subgroups
+p_EMclust_ori <- plot_violin_clustering(data_ori,EM_prop, "Emulation Propensity",0,1)   
+p_EMclust_rep <- plot_violin_clustering(data_rep,EM_prop, "Emulation Propensity",0,1)
+
+ggsave("FigS9b_1.eps",plot =p_EMclust_ori,path = "output",
+       width = 130,height = 100, units = "mm")
+ggsave("FigS9b_2.eps",plot =p_EMclust_rep,path = "output",
+       width = 130,height = 100, units = "mm")
+
+```
+
+```{r FigS9c}
+# Fig. S9c: violin plot comparing Age across OL subgroups
+# discovery sample
+errbar_lims <- group_by(data_ori, cluster_group) %>% 
+  summarize(mean=mean(Age_convert,na.rm=TRUE), sd=sd(Age_convert,na.rm=TRUE), 
+            upper=mean+sd, lower=mean-sd)
+p_Ageclust_ori <- plot_violin_clustering(data_ori,Age_convert, "Age",10,100) +  
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("NonLearn", "Emulation")), annotations="*",
+              map_signif_level=TRUE,y_position = 85,vjust=0.5)+
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("NonLearn", "Imitation")), annotations="**",
+              map_signif_level=TRUE,y_position = 80,extend_line=-0.22,vjust=0.5)+
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "Imitation")), annotations="***",
+              map_signif_level=TRUE,y_position = 80,extend_line=-0.22,vjust=0.5)+
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Arbitration", "Imitation")), annotations="**",
+              map_signif_level=TRUE,y_position = 92,vjust=0.5)
+# replication sample
+errbar_lims <- group_by(data_rep, cluster_group) %>% 
+  summarize(mean=mean(Age,na.rm=TRUE), sd=sd(Age,na.rm=TRUE), 
+            upper=mean+sd, lower=mean-sd)
+p_Ageclust_rep <- plot_violin_clustering(data_rep,Age, "Age",10,100) +  
+   geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "Imitation")), annotations="*",
+              map_signif_level=TRUE,y_position = 75,extend_line=-0.22,vjust=0.5)+
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("NonLearn", "Imitation")), annotations="*",
+              map_signif_level=TRUE,y_position = 75,extend_line=-0.22,vjust=0.5)
+
+  
+ggsave("FigS9c_1.eps",plot =p_Ageclust_ori,path = "output",
+       width = 130,height = 100, units = "mm")
+ggsave("FigS9c_2.eps",plot =p_Ageclust_rep,path = "output",
+       width = 130,height = 100, units = "mm")
+
+```
+
+```{r FigS9d}
+# Fig. S9d heatmap of cross-tab for gender
+# discovery sample
+sex_xtab_ori <- data.frame(subgroup = rep(c("Non-learning", "Imitation", "Emulation", "Mixture"), each = 3),
+                   gender = rep(c("Female","Male","Non-specific"),times=4),
+                   counts = round(c(133,123,2,46,41,0,228,220,4,93,51,1)))
+sex_xtab_ori$subgroup <- factor(sex_xtab_ori$subgroup, levels = c("Mixture", "Emulation", "Imitation","Non-learning"))
+p_sextab_ori <- ggplot(sex_xtab_ori, aes(gender, subgroup)) +    # Create default ggplot2 heatmap
+  geom_tile(aes(fill = counts),color="black")+                                        
+  geom_text(aes(label = counts))+
+  scale_fill_gradient(low = "white", high = "#e66aac",name="Count")+
+  theme_minimal() + 
+  labs(title="Discovery Sample",x=" ", y = " ") +
+  theme(plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+# replication sample
+sex_xtab_rep <- data.frame(subgroup = rep(c("Non-learning", "Imitation", "Emulation", "Mixture"), each = 2),
+                           gender = rep(c("Female","Male"),times=4),
+                           counts = round(c(41,52,28,23,70,59,37,41)))
+sex_xtab_rep$subgroup <- factor(sex_xtab_rep$subgroup, levels = c("Mixture", "Emulation", "Imitation","Non-learning"))
+p_sextab_rep <- ggplot(sex_xtab_rep, aes(gender, subgroup)) +    # Create default ggplot2 heatmap
+  geom_tile(aes(fill = counts),color="black")+                                        
+  geom_text(aes(label = counts))+
+  scale_fill_gradient(low = "white", high = "#e66aac",name="Count")+
+  theme_minimal() + 
+  labs(title="Replication Sample",x=" ", y = " ") +
+  theme(plot.title = element_text(hjust = 0.5,size=20),axis.title=element_text(size=16),
+        axis.text = element_text(size = 14))
+
+ggsave("FigS9d_1.eps",plot =p_sextab_ori,path = "output",
+       width = 130,height = 90, units = "mm")
+ggsave("FigS9d_2.eps",plot =p_sextab_rep,path = "output",
+       width = 130,height = 90, units = "mm")
+
+```
+
