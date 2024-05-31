@@ -20,6 +20,8 @@ Includes Study 1 and Study 2. In both of them, the following data files are incl
 
 Note that to keep the data anonymous, we removed the ID info from the shared spreadsheet. However, the order of the participant samples in all the data files are consistent.
 
+In addition, there's a 'Conte' folder, including the SRS raw item scores (and total scores) obtained from the Caltech Conte Database.
+
 ### analysis folder
 **model_free analysis:** Codes and outputs of the model-free analysis, including calculation of the accuracy and emulation propensity under each uncertainty condition.
 
