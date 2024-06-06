@@ -754,7 +754,7 @@ rm(list=ls())
 # discovery sample
 data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
 data_ori$F1_ranked <- rank(data_ori$SRS_F1)
-data_ori$R2_Emu_ranked <- rank(data_ori$nonhbi_R2_Emu)
+data_ori$R2_Emu_ranked <- rank(data_ori$nonhbi_R2_Emu,ties.method = 'max')
 p_r2emu_ori <- ggplot(data_ori, aes(x=F1_ranked, y=R2_Emu_ranked)) + 
   geom_point(size=2, color="#DBBADD",alpha=0.6)+
   geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
@@ -765,7 +765,7 @@ p_r2emu_ori <- ggplot(data_ori, aes(x=F1_ranked, y=R2_Emu_ranked)) +
 # replication sample
 data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
 data_rep$F1_ranked <- rank(data_rep$SRS_F1)
-data_rep$R2_Emu_ranked <- rank(data_rep$nonhbi_R2_Emu)
+data_rep$R2_Emu_ranked <- rank(data_rep$nonhbi_R2_Emu,ties.method = 'max')
 p_r2emu_rep <- ggplot(data_rep, aes(x=F1_ranked, y=R2_Emu_ranked)) + 
   geom_point(size=2, color="#DBBADD",alpha=0.6)+
   geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
@@ -788,7 +788,7 @@ rm(list=ls())
 # discovery sample
 data_ori <- read_csv("../data/Study1/AllVars_discovery.csv")
 data_ori$F1_ranked <- rank(data_ori$SRS_F1)
-data_ori$R2_Imi_ranked <- rank(data_ori$nonhbi_R2_Imi)
+data_ori$R2_Imi_ranked <- rank(data_ori$nonhbi_R2_Imi,ties.method='max')
 p_r2imi_ori <- ggplot(data_ori, aes(x=F1_ranked, y=R2_Imi_ranked)) + 
   geom_point(size=2, color="#9CD08F",alpha=0.6)+
   geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
@@ -799,7 +799,7 @@ p_r2imi_ori <- ggplot(data_ori, aes(x=F1_ranked, y=R2_Imi_ranked)) +
 # replication sample
 data_rep <- read_csv("../data/Study2/AllVars_replication.csv")
 data_rep$F1_ranked <- rank(data_rep$SRS_F1)
-data_rep$R2_Imi_ranked <- rank(data_rep$nonhbi_R2_Imi)
+data_rep$R2_Imi_ranked <- rank(data_rep$nonhbi_R2_Imi,ties.method = 'max')
 p_r2imi_rep <- ggplot(data_rep, aes(x=F1_ranked, y=R2_Imi_ranked)) + 
   geom_point(size=2, color="#9CD08F",alpha=0.6)+
   geom_smooth(method=lm, color="black", fill="grey",linewidth=0.8)+
