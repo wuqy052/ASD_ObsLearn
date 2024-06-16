@@ -41,7 +41,7 @@ p_emprop_ori <- ggplot() +
   geom_point(data=errbar_lims, aes(x=Uncertainty, y=mean), size=1)+
   geom_errorbar(aes(x=errbar_lims$Uncertainty, ymax=errbar_lims$upper, 
                     ymin=errbar_lims$lower), stat='identity', width=.1) +
-  geom_signif(data=data_ori,aes(x=Uncertainty, y=EM_prop),comparisons = list(c("High", "Low")), annotations="italic(p)<0.0001",
+  geom_signif(data=data_ori,aes(x=Uncertainty, y=EM_prop),comparisons = list(c("High", "Low")), annotations="italic(p)<0.001",
               parse=TRUE,map_signif_level=TRUE,y_position = 1.02,textsize=4)+
   scale_fill_brewer(palette="Reds")+
   labs(title="Discovery Sample",x="Uncertainty", y = "Emulation Propensity") +
@@ -284,7 +284,7 @@ p_F1clust_ori <- ggplot() +
   geom_point(data=errbar_lims, aes(x=cluster_group, y=mean), size=1) +
   geom_errorbar(aes(x=errbar_lims$cluster_group, ymax=errbar_lims$upper, 
                     ymin=errbar_lims$lower), stat='identity', width=.1) +
-  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "NonLearn")), annotations="italic(p)<0.0001",
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "NonLearn")), annotations="italic(p)<0.001",
               parse=TRUE,map_signif_level=TRUE,y_position = 6.2,textsize=3.5,vjust=0)+
   geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "Imitation")), annotations="italic(p)==0.005",
               parse=TRUE,map_signif_level=TRUE,y_position = 5,textsize=3.5,vjust=0)+
@@ -308,7 +308,7 @@ p_F1clust_rep <- ggplot() +
   geom_point(data=errbar_lims, aes(x=cluster_group, y=mean), size=1) +
   geom_errorbar(aes(x=errbar_lims$cluster_group, ymax=errbar_lims$upper, 
                     ymin=errbar_lims$lower), stat='identity', width=.1) +
-  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "NonLearn")), annotations="italic(p)<0.0001",
+  geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "NonLearn")), annotations="italic(p)<0.001",
               parse=TRUE,map_signif_level=TRUE,y_position = 10,textsize=3.5,vjust=0)+
   geom_signif(data=errbar_lims,aes(x=cluster_group, y=mean),comparisons = list(c("Emulation", "Imitation")), annotations="italic(p)==0.006",
               parse=TRUE,map_signif_level=TRUE,y_position = 7.5,textsize=3.5,vjust=0)+
@@ -830,7 +830,7 @@ p_acc_ori <- ggplot() +
   geom_point(data=errbar_lims, aes(x=Uncertainty, y=mean), size=1) +
   geom_errorbar(aes(x=errbar_lims$Uncertainty, ymax=errbar_lims$upper, 
                     ymin=errbar_lims$lower), stat='identity', width=.1) +
-  geom_signif(data=data_ori,aes(x=Uncertainty, y=ACC),comparisons = list(c("High", "Low")), annotations="italic(p)<0.0001",parse=TRUE,
+  geom_signif(data=data_ori,aes(x=Uncertainty, y=ACC),comparisons = list(c("High", "Low")), annotations="italic(p)<0.001",parse=TRUE,
               map_signif_level=TRUE,y_position =1.01,textsize=4)+
   labs(title="Discovery Sample",x="Uncertainty", y = "Accuracy") +
   scale_y_continuous(breaks=seq(0,1,by=0.25),limits=c(0,1.13))+
