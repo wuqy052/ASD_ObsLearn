@@ -1,7 +1,7 @@
 # ASD_ObsLearn
 
-### Check out our Preprint!
-https://osf.io/preprints/psyarxiv/mfc7z/ 
+### Individual Differences in Autism-like Traits are Associated with Reduced Emulation in a Computational Model of Observational Learning
+Now published at Nature Mental Health: https://doi.org/10.1038/s44220-024-00287-1 
 
 ### task folder
 A demo of the task is available at the following URL: http://www.its.caltech.edu/~ccharpen/OL_demo.html.
