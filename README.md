@@ -1,6 +1,7 @@
 # ASD_ObsLearn
 
 ### Individual Differences in Autism-like Traits are Associated with Reduced Emulation in a Computational Model of Observational Learning
+![Advertise_figure](https://github.com/user-attachments/assets/841e0df2-8373-498a-87bf-c7a5aee10602)
 Now published at Nature Mental Health: https://doi.org/10.1038/s44220-024-00287-1 
 
 ### task folder
